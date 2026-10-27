@@ -122,6 +122,26 @@ export const OrganizationTree: React.FC = () => {
     setIsDragging(false);
   };
 
+  // Window-level dragging listener so fast mouse movements outside canvas remain active
+  useEffect(() => {
+    if (!isDragging) return;
+    const onWindowMove = (e: MouseEvent) => {
+      if (!treeScrollContainerRef.current) return;
+      const x = e.pageX - treeScrollContainerRef.current.offsetLeft;
+      const walk = (x - dragStartX) * 1.6;
+      treeScrollContainerRef.current.scrollLeft = dragScrollLeft - walk;
+    };
+    const onWindowUp = () => {
+      setIsDragging(false);
+    };
+    window.addEventListener('mousemove', onWindowMove);
+    window.addEventListener('mouseup', onWindowUp);
+    return () => {
+      window.removeEventListener('mousemove', onWindowMove);
+      window.removeEventListener('mouseup', onWindowUp);
+    };
+  }, [isDragging, dragStartX, dragScrollLeft]);
+
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     if (!treeScrollContainerRef.current) return;
     if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && !e.shiftKey) {
@@ -779,7 +799,7 @@ export const OrganizationTree: React.FC = () => {
           onMouseUp={handleMouseUpOrLeave}
           onMouseLeave={handleMouseUpOrLeave}
           onWheel={handleWheel}
-          className={`w-full overflow-x-auto p-3 sm:p-8 min-h-[500px] sm:min-h-[600px] touch-pan-x overscroll-x-contain scrollbar-thin select-none transition-colors ${
+          className={`w-full overflow-x-auto p-3 sm:p-8 min-h-[500px] sm:min-h-[600px] touch-auto overscroll-x-contain scrollbar-thin select-none transition-colors ${
             isDragging ? 'cursor-grabbing' : 'cursor-grab'
           }`}
           style={{ WebkitOverflowScrolling: 'touch' }}

@@ -175,7 +175,7 @@ export const OrganizationList: React.FC<OrganizationListProps> = ({ side }) => {
           <div>
             <p className="text-xs text-themeText-muted font-medium">Total {side} Members</p>
             <p className="text-2xl font-bold text-themeText-primary mt-0.5">
-              {data ? data.total_members : '—'}
+              {data ? (isNaN(Number(data.total_members)) ? 0 : Number(data.total_members)) : '—'}
             </p>
           </div>
         </Card>
@@ -187,7 +187,7 @@ export const OrganizationList: React.FC<OrganizationListProps> = ({ side }) => {
           <div>
             <p className="text-xs text-themeText-muted font-medium">Active Stakers</p>
             <p className="text-2xl font-bold text-semantic-success mt-0.5">
-              {data ? data.active_members : '—'}
+              {data ? (isNaN(Number(data.active_members)) ? 0 : Number(data.active_members)) : '—'}
             </p>
           </div>
         </Card>
@@ -199,7 +199,7 @@ export const OrganizationList: React.FC<OrganizationListProps> = ({ side }) => {
           <div>
             <p className="text-xs text-themeText-muted font-medium">Inactive Members</p>
             <p className="text-2xl font-bold text-themeText-secondary mt-0.5">
-              {data ? data.inactive_members : '—'}
+              {data ? (isNaN(Number(data.inactive_members)) ? 0 : Number(data.inactive_members)) : '—'}
             </p>
           </div>
         </Card>

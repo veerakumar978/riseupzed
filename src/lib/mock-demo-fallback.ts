@@ -519,6 +519,73 @@ export function handleMockFallback<T>(endpoint: string, options: RequestInit = {
 
   // 11. Organization Tree & Details
   if (urlPath === '/api/v1/organization/tree') {
+    const rootCodeMatch = endpoint.match(/[?&]root_code=([^&]+)/);
+    if (rootCodeMatch) {
+      const targetCode = decodeURIComponent(rootCodeMatch[1]).trim().toUpperCase();
+      const findNodeInTree = (node: TreeNodeItem, code: string): TreeNodeItem | null => {
+        if (node.member_code && node.member_code.toUpperCase() === code) {
+          return node;
+        }
+        if (node.children) {
+          for (const child of node.children) {
+            const found = findNodeInTree(child, code);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+
+      const foundNode = findNodeInTree(MOCK_TREE, targetCode);
+      if (foundNode) {
+        return foundNode as unknown as T;
+      }
+
+      // If searched node is not in static tree, synthesize a populated tree node so drill-down always succeeds
+      const synthNode: TreeNodeItem = {
+        node_id: `node-${targetCode.toLowerCase()}`,
+        member_id: `usr-${targetCode.toLowerCase()}`,
+        member_code: targetCode,
+        display_name: `Member ${targetCode}`,
+        package_name: 'Platinum Package',
+        package_price: 2500,
+        status: 'ACTIVE',
+        position: 'LEFT',
+        parent_code: 'RZ-8942',
+        parent_name: 'Johnathan Sterling',
+        is_occupied: true,
+        children: [
+          {
+            node_id: `node-${targetCode.toLowerCase()}-l`,
+            member_id: `usr-${targetCode.toLowerCase()}-l`,
+            member_code: `${targetCode}-L1`,
+            display_name: `${targetCode} Left Partner`,
+            package_name: 'Gold Package',
+            package_price: 1000,
+            status: 'ACTIVE',
+            position: 'LEFT',
+            parent_code: targetCode,
+            parent_name: `Member ${targetCode}`,
+            is_occupied: true,
+            children: [],
+          },
+          {
+            node_id: `node-${targetCode.toLowerCase()}-r`,
+            member_id: `usr-${targetCode.toLowerCase()}-r`,
+            member_code: `${targetCode}-R1`,
+            display_name: `${targetCode} Right Partner`,
+            package_name: 'Silver Package',
+            package_price: 500,
+            status: 'ACTIVE',
+            position: 'RIGHT',
+            parent_code: targetCode,
+            parent_name: `Member ${targetCode}`,
+            is_occupied: true,
+            children: [],
+          },
+        ],
+      };
+      return synthNode as unknown as T;
+    }
     return MOCK_TREE as unknown as T;
   }
 
