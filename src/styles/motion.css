@@ -1,0 +1,117 @@
+/**
+ * Riseupzed Motion & Animation System
+ * Smooth, lightweight, hardware-accelerated animations with complete reduced-motion support.
+ */
+
+/* Ambient Glow Orbs floating animation */
+@keyframes orb-float-1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate(40px, -30px) scale(1.08);
+    opacity: 0.55;
+  }
+}
+
+@keyframes orb-float-2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate(-35px, 25px) scale(0.92);
+    opacity: 0.45;
+  }
+}
+
+@keyframes particle-drift {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-80px) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+.animate-orb-1 {
+  animation: orb-float-1 16s ease-in-out infinite;
+}
+
+.animate-orb-2 {
+  animation: orb-float-2 20s ease-in-out infinite;
+}
+
+/* Background Subtle Mesh Grid */
+.bg-mesh-grid {
+  background-size: 36px 36px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.light .bg-mesh-grid {
+  background-image: 
+    linear-gradient(to right, rgba(109, 40, 217, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(109, 40, 217, 0.04) 1px, transparent 1px);
+}
+
+/* Card 3D Depth Utilities */
+.card-depth-standard {
+  background-color: var(--bg-panel-primary);
+  border: 1px solid var(--border-dark);
+  box-shadow: var(--card-shadow), var(--card-highlight);
+  transition: transform var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out),
+              border-color var(--duration-normal) var(--ease-out);
+}
+
+.card-depth-elevated {
+  background-color: var(--bg-panel-elevated);
+  border: 1px solid var(--border-dark);
+  box-shadow: var(--card-shadow-elevated), var(--card-highlight);
+  transition: transform var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out),
+              border-color var(--duration-normal) var(--ease-out);
+}
+
+.card-glass {
+  background-color: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--card-shadow), var(--card-highlight);
+}
+
+/* Tabular Numbers for Data & Currency */
+.tabular-numbers {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Reduced Motion Policies */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-reduced-motion="true"] *,
+[data-reduced-motion="true"] *::before,
+[data-reduced-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}

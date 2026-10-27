@@ -1,0 +1,101 @@
+/**
+ * Riseupzed Theme Definitions
+ * Centralized CSS custom properties for Dark (default) and Light themes.
+ */
+
+:root,
+.dark {
+  /* Surfaces */
+  --bg-midnight: #080817;
+  --bg-panel-primary: #101024;
+  --bg-panel-secondary: #17112F;
+  --bg-panel-elevated: #20183B;
+  --bg-surface-strong: #2A1850;
+  
+  /* Glass Surfaces */
+  --bg-glass: rgba(16, 16, 36, 0.72);
+  --bg-glass-elevated: rgba(32, 24, 59, 0.75);
+  --border-glass: rgba(255, 255, 255, 0.08);
+
+  /* Brand Colors */
+  --brand-royal-purple: #17112F;
+  --brand-electric-violet: #5520A8;
+  --brand-bright-violet: #8B5CF6;
+  --brand-soft-lavender: #C4B5FD;
+  --brand-cyber-cyan: #22D3EE;
+  --brand-cyan-hover: #67E8F9;
+  --brand-luxury-gold: #F5C451;
+
+  /* Typography / Text */
+  --text-primary: #F4F2FF;
+  --text-secondary: #C4BED8;
+  --text-muted: #938CA9;
+  
+  /* Borders & Dividers */
+  --border-dark: #302545;
+  --border-subtle: #241B36;
+  --border-hover: #5520A8;
+
+  /* Semantic Colors */
+  --semantic-success: #34D399;
+  --semantic-warning: #FBBF24;
+  --semantic-error: #FB7185;
+  --semantic-info: #60A5FA;
+
+  /* Glows & Shadows */
+  --glow-purple: 0 0 24px -4px rgba(139, 92, 246, 0.35);
+  --glow-cyan: 0 0 24px -4px rgba(34, 211, 238, 0.35);
+  --glow-gold: 0 0 24px -4px rgba(245, 196, 81, 0.35);
+  --glow-focus: 0 0 0 2px #080817, 0 0 0 4px #8B5CF6;
+  --card-highlight: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  --card-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px #302545;
+  --card-shadow-elevated: 0 24px 48px -12px rgba(8, 8, 23, 0.8), 0 0 0 1px #302545;
+}
+
+.light {
+  /* Surfaces - Complete Pure White Background */
+  --bg-midnight: #FFFFFF;
+  --bg-panel-primary: #FFFFFF;
+  --bg-panel-secondary: #F8FAFC;
+  --bg-panel-elevated: #F1F5F9;
+  --bg-surface-strong: #E2E8F0;
+
+  /* Glass Surfaces */
+  --bg-glass: rgba(255, 255, 255, 0.95);
+  --bg-glass-elevated: rgba(248, 250, 252, 0.95);
+  --border-glass: rgba(109, 40, 217, 0.12);
+
+  /* Brand Colors */
+  --brand-royal-purple: #6D28D9;
+  --brand-electric-violet: #6D28D9;
+  --brand-bright-violet: #7C3AED;
+  --brand-soft-lavender: #4C1D95;
+  --brand-cyber-cyan: #0284C7;
+  --brand-cyan-hover: #0EA5E9;
+  --brand-luxury-gold: #D97706;
+
+  /* Typography / Text - Crisp High-Contrast Dark */
+  --text-primary: #0F172A;
+  --text-secondary: #334155;
+  --text-muted: #64748B;
+
+  /* Borders & Dividers */
+  --border-dark: #E2E8F0;
+  --border-subtle: #F1F5F9;
+  --border-hover: #7C3AED;
+
+  /* Semantic Colors */
+  --semantic-success: #16A34A;
+  --semantic-warning: #D97706;
+  --semantic-error: #DC2626;
+  --semantic-info: #2563EB;
+
+  /* Glows & Shadows */
+  --glow-purple: 0 0 20px -4px rgba(124, 58, 237, 0.15);
+  --glow-cyan: 0 0 20px -4px rgba(2, 132, 199, 0.15);
+  --glow-gold: 0 0 20px -4px rgba(217, 119, 6, 0.15);
+  --glow-focus: 0 0 0 2px #FFFFFF, 0 0 0 4px #7C3AED;
+  --card-highlight: inset 0 1px 0 0 rgba(255, 255, 255, 1);
+  --card-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.06), 0 0 0 1px #E2E8F0;
+  --card-shadow-elevated: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 0 0 1px #CBD5E1;
+}
