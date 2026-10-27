@@ -343,44 +343,6 @@ export const OrganizationTree: React.FC = () => {
     }
   };
 
-  // Rank badge styling helper
-  const getRankBadgeInfo = (packageName?: string) => {
-    const pkg = (packageName || '').toLowerCase();
-    if (pkg.includes('diamond')) {
-      return {
-        icon: '💎',
-        label: packageName || 'Diamond Ambassador',
-        color: 'text-amber-300 bg-amber-500/10 border-amber-500/30',
-      };
-    }
-    if (pkg.includes('platinum')) {
-      return {
-        icon: '👑',
-        label: packageName || 'Platinum Director',
-        color: 'text-purple-300 bg-purple-500/10 border-purple-500/30',
-      };
-    }
-    if (pkg.includes('gold')) {
-      return {
-        icon: '🥇',
-        label: packageName || 'Gold Executive',
-        color: 'text-yellow-300 bg-yellow-500/10 border-yellow-500/30',
-      };
-    }
-    if (pkg.includes('silver')) {
-      return {
-        icon: '🥈',
-        label: packageName || 'Silver Staker',
-        color: 'text-slate-200 bg-slate-500/10 border-slate-500/30',
-      };
-    }
-    return {
-      icon: '⚡',
-      label: packageName || 'Standard Staker',
-      color: 'text-brand-cyber-cyan bg-brand-cyber-cyan/10 border-brand-cyber-cyan/30',
-    };
-  };
-
   const getInitials = (name?: string) => {
     if (!name) return 'RZ';
     const parts = name.trim().split(/\s+/);
@@ -390,7 +352,7 @@ export const OrganizationTree: React.FC = () => {
     return name.slice(0, 2).toUpperCase();
   };
 
-  // Clean, structured card renderer with pristine alignment
+  // Clean, high-contrast 3-color card renderer (Theme Neutral + Luxury Gold + Secondary Muted)
   const renderNode = (node: TreeNodeItem, isRoot = false) => {
     if (!node.is_occupied) {
       // VACANT NODE: Clean, structured neutral card
@@ -398,24 +360,24 @@ export const OrganizationTree: React.FC = () => {
       const parentCode = node.parent_code || currentRootCode;
 
       return (
-        <div className="w-[280px] h-[220px] rounded-2xl p-4 flex flex-col justify-between transition-all duration-200 border-2 border-dashed border-themeBorder/80 bg-gradient-to-b from-[#160d26]/90 to-[#0e071a]/95 shadow-lg hover:border-brand-luxury-gold/70 group shrink-0 relative">
+        <div className="w-[280px] h-[220px] rounded-2xl p-4 flex flex-col justify-between transition-all duration-200 border-2 border-dashed border-themeBorder bg-panel-primary hover:border-brand-luxury-gold/70 group shrink-0 relative shadow-sm">
           {/* Top connector notch indicator */}
-          <div className="absolute -top-[5px] left-1/2 -translate-x-1/2 w-4 h-1 rounded-full bg-brand-luxury-gold/50" />
+          <div className="absolute -top-[5px] left-1/2 -translate-x-1/2 w-4 h-1 rounded-full bg-themeBorder" />
 
           {/* Header */}
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-panel-secondary text-themeText-muted border border-themeBorder flex items-center gap-1">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-panel-secondary text-themeText-secondary border border-themeBorder flex items-center gap-1">
               <span>{pos === 'LEFT' ? '◀' : '▶'}</span> {pos} SLOT
             </span>
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-amber-300 bg-amber-950/50 px-2 py-0.5 rounded-full border border-amber-500/30">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-themeText-muted bg-panel-secondary px-2 py-0.5 rounded-full border border-themeBorder">
+              <span className="w-1.5 h-1.5 rounded-full bg-themeText-muted" />
               Vacant
             </span>
           </div>
 
           {/* Center Identity Section */}
           <div className="flex items-center gap-3 my-auto text-left">
-            <div className="w-12 h-12 rounded-xl bg-panel-secondary/80 border-2 border-dashed border-themeBorder flex items-center justify-center text-themeText-muted group-hover:border-brand-luxury-gold/60 group-hover:text-brand-luxury-gold transition-colors shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-panel-secondary border-2 border-dashed border-themeBorder flex items-center justify-center text-themeText-muted group-hover:border-brand-luxury-gold/60 group-hover:text-brand-luxury-gold transition-colors shrink-0">
               <UserPlus className="w-5 h-5" />
             </div>
             <div className="min-w-0 flex-1">
@@ -429,19 +391,19 @@ export const OrganizationTree: React.FC = () => {
           </div>
 
           {/* Middle Info Banner */}
-          <div className="px-2.5 py-1 rounded-lg bg-panel-secondary/50 border border-themeBorder/60 text-center">
+          <div className="px-2.5 py-1 rounded-lg bg-panel-secondary border border-themeBorder text-center">
             <span className="text-[11px] font-medium text-themeText-muted truncate block">
-              Slot under <span className="font-mono text-brand-cyber-cyan font-bold">{parentCode}</span>
+              Slot under <span className="font-mono text-themeText-primary font-bold">{parentCode}</span>
             </span>
           </div>
 
           {/* Footer Action */}
-          <div className="pt-2 border-t border-themeBorder/60">
+          <div className="pt-2 border-t border-themeBorder">
             <Button
               variant="outline"
               size="sm"
               onClick={() => handleOpenPlacement(parentCode, pos)}
-              className="w-full text-xs h-8 flex items-center justify-center gap-1.5 border-brand-luxury-gold/50 text-brand-luxury-gold hover:bg-brand-luxury-gold hover:text-black font-bold transition-all shadow-sm"
+              className="w-full text-xs h-8 flex items-center justify-center gap-1.5 border-themeBorder text-themeText-primary hover:border-brand-luxury-gold hover:text-brand-luxury-gold font-semibold transition-all shadow-sm"
             >
               <UserPlus className="w-3.5 h-3.5" />
               <span>+ Add Member</span>
@@ -451,37 +413,38 @@ export const OrganizationTree: React.FC = () => {
       );
     }
 
-    // OCCUPIED NODE: Clean, structured Gold/Yellow highlighted card
-    const rankInfo = getRankBadgeInfo(node.package_name);
+    // OCCUPIED NODE: Clean, structured Gold-accented card
     const initials = getInitials(node.display_name);
 
     return (
       <div
-        className={`w-[280px] h-[220px] rounded-2xl p-4 flex flex-col justify-between transition-all duration-300 border-2 shrink-0 relative ${
+        className={`w-[280px] h-[220px] rounded-2xl p-4 flex flex-col justify-between transition-all duration-300 border-2 shrink-0 relative bg-panel-primary ${
           isRoot
-            ? 'bg-gradient-to-b from-[#22133a] to-[#120824] border-brand-luxury-gold shadow-[0_0_25px_rgba(245,197,65,0.4)] ring-1 ring-brand-luxury-gold/30'
-            : 'bg-gradient-to-b from-[#1c1032] to-[#0f071d] border-brand-luxury-gold/60 shadow-[0_0_15px_rgba(245,197,65,0.18)] hover:border-brand-luxury-gold hover:shadow-[0_0_22px_rgba(245,197,65,0.35)]'
+            ? 'border-brand-luxury-gold shadow-[0_4px_20px_-2px_rgba(245,197,65,0.25)] ring-1 ring-brand-luxury-gold/40'
+            : 'border-themeBorder hover:border-brand-luxury-gold/80 shadow-sm hover:shadow-md'
         }`}
       >
         {/* Top connector notch indicator */}
-        <div className="absolute -top-[5px] left-1/2 -translate-x-1/2 w-4 h-1 rounded-full bg-brand-luxury-gold shadow-[0_0_6px_rgba(245,197,65,0.8)]" />
+        <div
+          className={`absolute -top-[5px] left-1/2 -translate-x-1/2 w-4 h-1 rounded-full ${
+            isRoot ? 'bg-brand-luxury-gold' : 'bg-themeBorder'
+          }`}
+        />
 
         {/* Header: Leg Position Badge & Status */}
         <div className="flex items-center justify-between">
           <span
             className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
               isRoot
-                ? 'bg-brand-luxury-gold/20 text-brand-luxury-gold border-brand-luxury-gold/40 shadow-sm'
-                : node.position === 'LEFT'
-                ? 'bg-brand-bright-violet/20 text-brand-soft-lavender border-brand-bright-violet/40'
-                : 'bg-brand-cyber-cyan/20 text-brand-cyber-cyan border-brand-cyber-cyan/40'
+                ? 'bg-brand-luxury-gold/15 text-brand-luxury-gold border-brand-luxury-gold/40'
+                : 'bg-panel-secondary text-themeText-secondary border-themeBorder'
             }`}
           >
             {isRoot ? '★ ROOT MEMBER' : `${node.position || 'NODE'} LEG`}
           </span>
 
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-semantic-success bg-semantic-success/10 px-2 py-0.5 rounded-full border border-semantic-success/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-semantic-success animate-pulse" />
             Active
           </span>
         </div>
@@ -492,8 +455,8 @@ export const OrganizationTree: React.FC = () => {
           <div
             className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 border-2 shadow-inner ${
               isRoot
-                ? 'bg-gradient-to-br from-amber-500/30 to-purple-800/40 border-brand-luxury-gold text-brand-luxury-gold shadow-[0_0_10px_rgba(245,197,65,0.3)]'
-                : 'bg-gradient-to-br from-purple-900/40 to-slate-900/60 border-brand-luxury-gold/60 text-white'
+                ? 'bg-brand-luxury-gold/15 border-brand-luxury-gold text-brand-luxury-gold'
+                : 'bg-panel-secondary border-themeBorder text-themeText-primary'
             }`}
           >
             {initials}
@@ -501,11 +464,11 @@ export const OrganizationTree: React.FC = () => {
 
           {/* Member Details */}
           <div className="min-w-0 flex-1">
-            <h4 className="text-sm font-bold text-white truncate tracking-tight">
+            <h4 className="text-sm font-bold text-themeText-primary truncate tracking-tight">
               {node.display_name}
             </h4>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-brand-cyber-cyan/15 text-brand-cyber-cyan border border-brand-cyber-cyan/30">
+              <span className="font-mono text-[11px] font-semibold px-2 py-0.5 rounded bg-panel-secondary text-themeText-muted border border-themeBorder">
                 {node.member_code}
               </span>
             </div>
@@ -513,20 +476,19 @@ export const OrganizationTree: React.FC = () => {
         </div>
 
         {/* Rank & Package Tier Chip */}
-        <div className={`px-2.5 py-1 rounded-lg border text-xs font-semibold flex items-center justify-center gap-1.5 ${rankInfo.color}`}>
-          <span className="text-sm">{rankInfo.icon}</span>
-          <span className="truncate">{rankInfo.label}</span>
+        <div className="px-2.5 py-1 rounded-lg border border-themeBorder bg-panel-secondary text-xs font-semibold text-themeText-primary flex items-center justify-center gap-1.5">
+          <span>{node.package_name || 'Standard Staker'}</span>
         </div>
 
         {/* Footer Action Buttons */}
-        <div className="pt-2 border-t border-brand-luxury-gold/20 flex items-center gap-2">
+        <div className="pt-2 border-t border-themeBorder flex items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => node.member_code && handleOpenDetails(node.member_code)}
-            className="flex-1 text-xs py-1 h-7 text-themeText-secondary hover:text-white hover:bg-white/10 border border-themeBorder font-semibold"
+            className="flex-1 text-xs py-1 h-7 text-themeText-secondary hover:text-themeText-primary border border-themeBorder font-semibold"
           >
-            <Eye className="w-3.5 h-3.5 mr-1 text-brand-cyber-cyan" />
+            <Eye className="w-3.5 h-3.5 mr-1 text-brand-luxury-gold" />
             Details
           </Button>
 
@@ -545,7 +507,7 @@ export const OrganizationTree: React.FC = () => {
               View Tree
             </Button>
           ) : isRoot ? (
-            <div className="flex-1 text-center py-1 text-[11px] font-bold text-brand-luxury-gold/90 bg-brand-luxury-gold/10 rounded border border-brand-luxury-gold/20">
+            <div className="flex-1 text-center py-1 text-[11px] font-bold text-brand-luxury-gold bg-brand-luxury-gold/10 rounded border border-brand-luxury-gold/20">
               Focus Node
             </div>
           ) : null}
@@ -646,9 +608,9 @@ export const OrganizationTree: React.FC = () => {
       )}
 
       {/* Visual Tree Viewport Card */}
-      <Card variant="standard" padding="none" className="relative overflow-hidden bg-panel-primary/50 border border-themeBorder">
+      <Card variant="standard" padding="none" className="relative overflow-hidden bg-panel-primary border border-themeBorder">
         {/* Subtle grid background */}
-        <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(#0000000a_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
 
         {/* ============================================================== */}
         {/* STICKY LEVEL NAVIGATION & STEP-BY-STEP BREADCRUMB BAR          */}
@@ -658,10 +620,10 @@ export const OrganizationTree: React.FC = () => {
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap max-w-full">
             {previousStep ? (
               <Button
-                variant="primary"
+                variant="outline"
                 size="sm"
                 onClick={handleBackOneLevel}
-                className="flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold text-xs shadow-[0_0_15px_rgba(139,92,246,0.5)] px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all shrink-0"
+                className="flex items-center gap-1.5 sm:gap-2 bg-brand-luxury-gold/15 hover:bg-brand-luxury-gold/25 text-brand-luxury-gold border border-brand-luxury-gold/40 font-bold text-xs px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl transition-all shrink-0 shadow-sm"
                 title={`Return up to Level ${previousStep.level}`}
               >
                 <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.5]" />
@@ -754,15 +716,15 @@ export const OrganizationTree: React.FC = () => {
         {/* ============================================================== */}
         {/* QUICK-JUMP NAVIGATION & INTERACTIVE CANVAS CONTROLS            */}
         {/* ============================================================== */}
-        <div className="px-3 sm:px-4 py-2 bg-gradient-to-r from-[#1c0f33] to-[#0d0718] border-b border-brand-luxury-gold/30 flex flex-wrap items-center justify-between gap-2 sticky top-[48px] z-20 shadow-md">
-          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-brand-luxury-gold uppercase tracking-wider shrink-0">
+        <div className="px-3 sm:px-4 py-2 bg-panel-secondary border-b border-themeBorder flex flex-wrap items-center justify-between gap-2 sticky top-[48px] z-20 shadow-sm">
+          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-themeText-primary uppercase tracking-wider shrink-0">
             <span>⚡ Canvas Navigation:</span>
           </div>
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={scrollToLeftLeg}
-              className="px-3 py-1 rounded-lg text-xs font-bold bg-brand-bright-violet/25 hover:bg-brand-bright-violet/40 text-brand-soft-lavender border border-brand-bright-violet/50 flex items-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
+              className="px-3 py-1 rounded-lg text-xs font-semibold bg-panel-primary hover:bg-panel-elevated text-themeText-primary border border-themeBorder flex items-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
               title="Scroll directly to Left Leg branch"
             >
               <span>◀</span> Left Leg
@@ -770,7 +732,7 @@ export const OrganizationTree: React.FC = () => {
             <button
               type="button"
               onClick={scrollToCenter}
-              className="px-3.5 py-1 rounded-lg text-xs font-bold bg-brand-luxury-gold/25 hover:bg-brand-luxury-gold/40 text-brand-luxury-gold border border-brand-luxury-gold/60 flex items-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
+              className="px-3.5 py-1 rounded-lg text-xs font-bold bg-brand-luxury-gold/15 hover:bg-brand-luxury-gold/25 text-brand-luxury-gold border border-brand-luxury-gold/40 flex items-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
               title="Center view on Root Node"
             >
               ★ Center Root
@@ -778,7 +740,7 @@ export const OrganizationTree: React.FC = () => {
             <button
               type="button"
               onClick={scrollToRightLeg}
-              className="px-3 py-1 rounded-lg text-xs font-bold bg-brand-cyber-cyan/25 hover:bg-brand-cyber-cyan/40 text-brand-cyber-cyan border border-brand-cyber-cyan/50 flex items-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
+              className="px-3 py-1 rounded-lg text-xs font-semibold bg-panel-primary hover:bg-panel-elevated text-themeText-primary border border-themeBorder flex items-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
               title="Scroll directly to Right Leg branch"
             >
               Right Leg <span>▶</span>
@@ -822,20 +784,20 @@ export const OrganizationTree: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleBackOneLevel}
-                    className="group flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-950/80 to-purple-950/80 hover:from-violet-900 hover:to-purple-900 border-2 border-brand-bright-violet/70 hover:border-brand-bright-violet text-xs text-white font-bold transition-all shadow-[0_0_15px_rgba(139,92,246,0.35)] cursor-pointer"
+                    className="group flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-panel-primary hover:bg-panel-secondary border-2 border-brand-luxury-gold text-xs text-themeText-primary font-bold transition-all shadow-sm cursor-pointer"
                     title={`Click to go back to Level ${previousStep.level}`}
                   >
-                    <ArrowLeft className="w-4 h-4 text-brand-soft-lavender group-hover:-translate-x-1 transition-transform stroke-[2.5]" />
+                    <ArrowLeft className="w-4 h-4 text-brand-luxury-gold group-hover:-translate-x-1 transition-transform stroke-[2.5]" />
                     <span>
                       ↑ Return to Level {previousStep.level}: {previousStep.name} ({previousStep.code})
                     </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-bright-violet/30 font-bold uppercase tracking-wider text-brand-soft-lavender">
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-luxury-gold/15 font-bold uppercase tracking-wider text-brand-luxury-gold border border-brand-luxury-gold/30">
                       Parent
                     </span>
                   </button>
 
                   {/* Upward Line Connector into Parent */}
-                  <div className="w-[3px] h-6 border-l-[3px] border-dashed border-brand-bright-violet/80" />
+                  <div className="w-[3px] h-6 border-l-[3px] border-dashed border-brand-luxury-gold" />
                 </div>
               )}
 
@@ -846,10 +808,10 @@ export const OrganizationTree: React.FC = () => {
                 {renderNode(treeData, true)}
 
                 {/* Vertical Stem down from Root */}
-                <div className="w-[3px] h-8 bg-brand-luxury-gold shadow-[0_0_12px_rgba(245,197,65,0.9)]" />
+                <div className="w-[3px] h-8 bg-brand-luxury-gold" />
 
                 {/* Split Junction Pulse Node */}
-                <div className="w-5 h-5 rounded-full bg-[#120a22] border-2 border-brand-luxury-gold shadow-[0_0_12px_rgba(245,197,65,0.9)] flex items-center justify-center -my-2.5 z-10">
+                <div className="w-5 h-5 rounded-full bg-panel-primary border-2 border-brand-luxury-gold shadow-sm flex items-center justify-center -my-2.5 z-10">
                   <div className="w-2 h-2 rounded-full bg-brand-luxury-gold animate-pulse" />
                 </div>
               </div>
@@ -860,15 +822,15 @@ export const OrganizationTree: React.FC = () => {
               <div className="w-full flex justify-center">
                 <div className="w-1/2 flex items-center relative">
                   {/* Left Branch Half */}
-                  <div className="flex-1 h-8 border-t-[3px] border-l-[3px] border-brand-luxury-gold rounded-tl-2xl shadow-[-3px_-3px_10px_rgba(245,197,65,0.3)] relative">
-                    <span className="absolute -top-3.5 left-8 text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#120a22] text-brand-soft-lavender border border-brand-bright-violet/50 shadow-md flex items-center gap-1">
+                  <div className="flex-1 h-8 border-t-[3px] border-l-[3px] border-brand-luxury-gold rounded-tl-2xl relative">
+                    <span className="absolute -top-3.5 left-8 text-[10px] font-mono font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-panel-primary text-themeText-primary border border-themeBorder shadow-sm flex items-center gap-1">
                       <span>◀</span> LEFT LEG
                     </span>
                   </div>
 
                   {/* Right Branch Half */}
-                  <div className="flex-1 h-8 border-t-[3px] border-r-[3px] border-brand-luxury-gold rounded-tr-2xl shadow-[3px_-3px_10px_rgba(245,197,65,0.3)] relative">
-                    <span className="absolute -top-3.5 right-8 text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#120a22] text-brand-cyber-cyan border border-brand-cyber-cyan/50 shadow-md flex items-center gap-1">
+                  <div className="flex-1 h-8 border-t-[3px] border-r-[3px] border-brand-luxury-gold rounded-tr-2xl relative">
+                    <span className="absolute -top-3.5 right-8 text-[10px] font-mono font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-panel-primary text-themeText-primary border border-themeBorder shadow-sm flex items-center gap-1">
                       RIGHT LEG <span>▶</span>
                     </span>
                   </div>
@@ -901,23 +863,23 @@ export const OrganizationTree: React.FC = () => {
                   {/* Stem & Split to Level 2 Grandchildren */}
                   <div className="w-full flex flex-col items-center">
                     {/* Vertical Stem */}
-                    <div className="w-[3px] h-8 bg-brand-luxury-gold shadow-[0_0_12px_rgba(245,197,65,0.9)]" />
+                    <div className="w-[3px] h-8 bg-brand-luxury-gold" />
 
                     {/* Junction Node */}
-                    <div className="w-4 h-4 rounded-full bg-[#120a22] border-2 border-brand-luxury-gold shadow-[0_0_10px_rgba(245,197,65,0.9)] flex items-center justify-center -my-2 z-10">
+                    <div className="w-4 h-4 rounded-full bg-panel-primary border-2 border-brand-luxury-gold shadow-sm flex items-center justify-center -my-2 z-10">
                       <div className="w-1.5 h-1.5 rounded-full bg-brand-luxury-gold" />
                     </div>
 
                     {/* Level 1 Left -> Level 2 Grandchildren Horizontal Connector */}
                     <div className="w-full flex justify-center">
                       <div className="w-1/2 flex items-center relative">
-                        <div className="flex-1 h-8 border-t-[3px] border-l-[3px] border-brand-luxury-gold rounded-tl-xl shadow-[-2px_-2px_8px_rgba(245,197,65,0.25)] relative">
-                          <span className="absolute -top-3 left-4 text-[9px] font-mono font-bold tracking-wider px-1.5 py-0.5 rounded bg-[#120a22] text-themeText-muted border border-themeBorder">
+                        <div className="flex-1 h-8 border-t-[3px] border-l-[3px] border-brand-luxury-gold rounded-tl-xl relative">
+                          <span className="absolute -top-3 left-4 text-[9px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-panel-primary text-themeText-muted border border-themeBorder shadow-sm">
                             L-SLOT
                           </span>
                         </div>
-                        <div className="flex-1 h-8 border-t-[3px] border-r-[3px] border-brand-luxury-gold rounded-tr-xl shadow-[2px_-2px_8px_rgba(245,197,65,0.25)] relative">
-                          <span className="absolute -top-3 right-4 text-[9px] font-mono font-bold tracking-wider px-1.5 py-0.5 rounded bg-[#120a22] text-themeText-muted border border-themeBorder">
+                        <div className="flex-1 h-8 border-t-[3px] border-r-[3px] border-brand-luxury-gold rounded-tr-xl relative">
+                          <span className="absolute -top-3 right-4 text-[9px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-panel-primary text-themeText-muted border border-themeBorder shadow-sm">
                             R-SLOT
                           </span>
                         </div>
@@ -989,23 +951,23 @@ export const OrganizationTree: React.FC = () => {
                   {/* Stem & Split to Level 2 Grandchildren */}
                   <div className="w-full flex flex-col items-center">
                     {/* Vertical Stem */}
-                    <div className="w-[3px] h-8 bg-brand-luxury-gold shadow-[0_0_12px_rgba(245,197,65,0.9)]" />
+                    <div className="w-[3px] h-8 bg-brand-luxury-gold" />
 
                     {/* Junction Node */}
-                    <div className="w-4 h-4 rounded-full bg-[#120a22] border-2 border-brand-luxury-gold shadow-[0_0_10px_rgba(245,197,65,0.9)] flex items-center justify-center -my-2 z-10">
+                    <div className="w-4 h-4 rounded-full bg-panel-primary border-2 border-brand-luxury-gold shadow-sm flex items-center justify-center -my-2 z-10">
                       <div className="w-1.5 h-1.5 rounded-full bg-brand-luxury-gold" />
                     </div>
 
                     {/* Level 1 Right -> Level 2 Grandchildren Horizontal Connector */}
                     <div className="w-full flex justify-center">
                       <div className="w-1/2 flex items-center relative">
-                        <div className="flex-1 h-8 border-t-[3px] border-l-[3px] border-brand-luxury-gold rounded-tl-xl shadow-[-2px_-2px_8px_rgba(245,197,65,0.25)] relative">
-                          <span className="absolute -top-3 left-4 text-[9px] font-mono font-bold tracking-wider px-1.5 py-0.5 rounded bg-[#120a22] text-themeText-muted border border-themeBorder">
+                        <div className="flex-1 h-8 border-t-[3px] border-l-[3px] border-brand-luxury-gold rounded-tl-xl relative">
+                          <span className="absolute -top-3 left-4 text-[9px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-panel-primary text-themeText-muted border border-themeBorder shadow-sm">
                             L-SLOT
                           </span>
                         </div>
-                        <div className="flex-1 h-8 border-t-[3px] border-r-[3px] border-brand-luxury-gold rounded-tr-xl shadow-[2px_-2px_8px_rgba(245,197,65,0.25)] relative">
-                          <span className="absolute -top-3 right-4 text-[9px] font-mono font-bold tracking-wider px-1.5 py-0.5 rounded bg-[#120a22] text-themeText-muted border border-themeBorder">
+                        <div className="flex-1 h-8 border-t-[3px] border-r-[3px] border-brand-luxury-gold rounded-tr-xl relative">
+                          <span className="absolute -top-3 right-4 text-[9px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-panel-primary text-themeText-muted border border-themeBorder shadow-sm">
                             R-SLOT
                           </span>
                         </div>

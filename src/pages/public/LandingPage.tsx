@@ -34,6 +34,27 @@ export const LandingPage: React.FC = () => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
   };
 
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
+    if (element) {
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+      try {
+        window.history.pushState(null, '', href);
+      } catch {
+        // ignore
+      }
+    }
+  };
+
   const navLinks = [
     { label: 'Overview', href: '#overview' },
     { label: 'Features', href: '#features' },
@@ -110,7 +131,11 @@ export const LandingPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen text-themeText-primary selection:bg-brand-bright-violet/30 selection:text-white relative overflow-x-hidden bg-[#07090e]">
+    <div
+      className={`min-h-screen selection:bg-brand-bright-violet/30 selection:text-white relative overflow-x-hidden transition-colors duration-200 ${
+        theme === 'light' ? 'bg-white text-slate-900' : 'bg-[#07090e] text-themeText-primary'
+      }`}
+    >
       {/* ============================================================== */}
       {/* CONTINUOUS REFERENCE HOMEPAGE BACKGROUND LAYER                 */}
       {/* ============================================================== */}
@@ -118,28 +143,26 @@ export const LandingPage: React.FC = () => {
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none"
       >
-        {/* Deep Midnight Navy Base Layer */}
-        <div className="absolute inset-0 bg-[#07090e]" />
+        {theme === 'dark' ? (
+          <>
+            {/* Deep Midnight Navy Base Layer in Dark Mode */}
+            <div className="absolute inset-0 bg-[#07090e]" />
 
-        {/* The Exact Reference Background Image Asset */}
-        <div
-          className="absolute inset-0 bg-no-repeat bg-cover bg-[center_top] sm:bg-center transition-all duration-300"
-          style={{
-            backgroundImage: "url('/images/riseupzed-homepage-background.png')",
-          }}
-        />
+            {/* The Exact Reference Background Image Asset in Dark Mode */}
+            <div
+              className="absolute inset-0 bg-no-repeat bg-cover bg-[center_top] sm:bg-center transition-all duration-300"
+              style={{
+                backgroundImage: "url('/images/riseupzed-homepage-background.png')",
+              }}
+            />
 
-        {/* Subtle Dark Mode Vignette for High Text Contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#07090e]/15 to-[#07090e]/50 pointer-events-none" />
-
-        {/* Light Mode Readability Layer - Preserves the exact underlying image while providing crisp light contrast */}
-        <div
-          className={`absolute inset-0 transition-opacity duration-300 pointer-events-none ${
-            theme === 'light'
-              ? 'opacity-100 bg-white/75 backdrop-blur-[1px]'
-              : 'opacity-0'
-          }`}
-        />
+            {/* Subtle Dark Mode Vignette for High Text Contrast */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#07090e]/15 to-[#07090e]/50 pointer-events-none" />
+          </>
+        ) : (
+          /* 100% Pure, Crisp Solid White in Light Mode - No dull gray opacity! */
+          <div className="absolute inset-0 bg-white" />
+        )}
       </div>
 
       {/* 1. Public Top Navigation Header */}
@@ -166,7 +189,8 @@ export const LandingPage: React.FC = () => {
               <a
                 key={link.label}
                 href={link.href}
-                className="hover:text-slate-900 dark:hover:text-white transition-colors py-1 focus:outline-none focus-visible:text-brand-cyber-cyan"
+                onClick={(e) => scrollToSection(e, link.href)}
+                className="hover:text-slate-900 dark:hover:text-white transition-colors py-1 focus:outline-none focus-visible:text-brand-cyber-cyan cursor-pointer"
               >
                 {link.label}
               </a>
@@ -178,7 +202,7 @@ export const LandingPage: React.FC = () => {
             <button
               onClick={toggleTheme}
               aria-label="Toggle visual theme"
-              className="p-2 rounded-standard text-themeText-muted hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors border border-transparent hover:border-themeBorder-subtle"
+              className="p-2 rounded-standard text-themeText-muted hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors border border-transparent hover:border-themeBorder-subtle cursor-pointer"
             >
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
@@ -204,13 +228,13 @@ export const LandingPage: React.FC = () => {
             <button
               onClick={toggleTheme}
               aria-label="Toggle visual theme"
-              className="p-2 rounded-standard text-themeText-muted hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10"
+              className="p-2 rounded-standard text-themeText-muted hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer"
             >
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-standard text-themeText-secondary hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10"
+              className="p-2 rounded-standard text-themeText-secondary hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -232,10 +256,11 @@ export const LandingPage: React.FC = () => {
                   <a
                     key={link.label}
                     href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-sm font-medium text-themeText-secondary hover:text-slate-900 dark:hover:text-white py-1.5"
+                    onClick={(e) => scrollToSection(e, link.href)}
+                    className="text-sm font-semibold text-slate-800 dark:text-themeText-secondary hover:text-brand-bright-violet dark:hover:text-white py-2 px-1 border-b border-themeBorder-subtle/40 flex items-center justify-between cursor-pointer"
                   >
-                    {link.label}
+                    <span>{link.label}</span>
+                    <ArrowRight className="w-3.5 h-3.5 opacity-50" />
                   </a>
                 ))}
               </div>
@@ -321,7 +346,11 @@ export const LandingPage: React.FC = () => {
                 Explore Live Demo
               </Button>
 
-              <a href="#overview" className="w-full sm:w-auto">
+              <a
+                href="#overview"
+                onClick={(e) => scrollToSection(e, '#overview')}
+                className="w-full sm:w-auto cursor-pointer"
+              >
                 <Button variant="secondary" size="lg" className="w-full">
                   Platform Architecture
                 </Button>
@@ -429,7 +458,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 3. Platform Architecture Pillars Section */}
-      <section id="overview" className="py-20 border-t border-white/10 dark:border-white/5 relative z-10">
+      <section id="overview" className="scroll-mt-24 py-20 border-t border-slate-200 dark:border-white/5 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <Badge variant="active" size="sm">Architecture</Badge>
@@ -494,7 +523,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 4. Features Grid */}
-      <section id="features" className="py-24 border-t border-white/10 dark:border-white/5 relative z-10">
+      <section id="features" className="scroll-mt-24 py-24 border-t border-slate-200 dark:border-white/5 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <Badge variant="pending" size="sm">Capabilities</Badge>
@@ -531,7 +560,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 5. How It Works Section */}
-      <section id="how-it-works" className="py-20 border-t border-white/10 dark:border-white/5 relative z-10">
+      <section id="how-it-works" className="scroll-mt-24 py-20 border-t border-slate-200 dark:border-white/5 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <Badge variant="active" size="sm">Workflow</Badge>
@@ -583,7 +612,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 6. Dashboard Preview Banner Section */}
-      <section id="preview" className="py-20 border-t border-white/10 dark:border-white/5 relative z-10">
+      <section id="preview" className="scroll-mt-24 py-20 border-t border-slate-200 dark:border-white/5 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-card homepage-card p-8 md:p-12 relative overflow-hidden shadow-elevation-3 border border-brand-bright-violet/30">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -645,7 +674,7 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* 8. FAQ Section */}
-      <section id="faq" className="py-20 border-t border-white/10 dark:border-white/5 relative z-10">
+      <section id="faq" className="scroll-mt-24 py-20 border-t border-slate-200 dark:border-white/5 relative z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="text-center space-y-3">
             <Badge variant="active" size="sm">Clarifications</Badge>
