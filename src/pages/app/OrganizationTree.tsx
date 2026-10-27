@@ -95,6 +95,40 @@ export const OrganizationTree: React.FC = () => {
     }
   }, []);
 
+  // Interactive drag-to-pan state for desktop/laptop mouse users
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartX, setDragStartX] = useState(0);
+  const [dragScrollLeft, setDragScrollLeft] = useState(0);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest('button, a, input, select, textarea')) {
+      return;
+    }
+    if (!treeScrollContainerRef.current) return;
+    setIsDragging(true);
+    setDragStartX(e.pageX - treeScrollContainerRef.current.offsetLeft);
+    setDragScrollLeft(treeScrollContainerRef.current.scrollLeft);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging || !treeScrollContainerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - treeScrollContainerRef.current.offsetLeft;
+    const walk = (x - dragStartX) * 1.6;
+    treeScrollContainerRef.current.scrollLeft = dragScrollLeft - walk;
+  };
+
+  const handleMouseUpOrLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    if (!treeScrollContainerRef.current) return;
+    if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && !e.shiftKey) {
+      treeScrollContainerRef.current.scrollLeft += e.deltaY * 0.9;
+    }
+  };
+
   const loadTree = useCallback(async (rootCode?: string, isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
@@ -697,44 +731,42 @@ export const OrganizationTree: React.FC = () => {
         </div>
 
         {/* ============================================================== */}
-        {/* MOBILE DEDICATED QUICK-JUMP NAVIGATION & SWIPE HELPER          */}
         {/* ============================================================== */}
-        <div className="sm:hidden px-3 py-2 bg-gradient-to-r from-[#1c0f33] to-[#0d0718] border-b border-brand-luxury-gold/30 flex items-center justify-between gap-2 sticky top-[48px] z-20 shadow-md">
-          <div className="flex items-center gap-1 text-[11px] font-bold text-brand-luxury-gold uppercase tracking-wider shrink-0">
-            <span>⚡ Jump:</span>
+        {/* QUICK-JUMP NAVIGATION & INTERACTIVE CANVAS CONTROLS            */}
+        {/* ============================================================== */}
+        <div className="px-3 sm:px-4 py-2 bg-gradient-to-r from-[#1c0f33] to-[#0d0718] border-b border-brand-luxury-gold/30 flex flex-wrap items-center justify-between gap-2 sticky top-[48px] z-20 shadow-md">
+          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold text-brand-luxury-gold uppercase tracking-wider shrink-0">
+            <span>⚡ Canvas Navigation:</span>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={scrollToLeftLeg}
-              className="px-2.5 py-1 rounded-lg text-xs font-bold bg-brand-bright-violet/25 hover:bg-brand-bright-violet/40 text-brand-soft-lavender border border-brand-bright-violet/50 flex items-center gap-1 shadow-sm active:scale-95 transition-transform"
-              title="Scroll to Left Leg branch"
+              className="px-3 py-1 rounded-lg text-xs font-bold bg-brand-bright-violet/25 hover:bg-brand-bright-violet/40 text-brand-soft-lavender border border-brand-bright-violet/50 flex items-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
+              title="Scroll directly to Left Leg branch"
             >
               <span>◀</span> Left Leg
             </button>
             <button
               type="button"
               onClick={scrollToCenter}
-              className="px-2.5 py-1 rounded-lg text-xs font-bold bg-brand-luxury-gold/25 hover:bg-brand-luxury-gold/40 text-brand-luxury-gold border border-brand-luxury-gold/60 flex items-center gap-1 shadow-sm active:scale-95 transition-transform"
-              title="Center on Root Node"
+              className="px-3.5 py-1 rounded-lg text-xs font-bold bg-brand-luxury-gold/25 hover:bg-brand-luxury-gold/40 text-brand-luxury-gold border border-brand-luxury-gold/60 flex items-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
+              title="Center view on Root Node"
             >
-              ★ Root
+              ★ Center Root
             </button>
             <button
               type="button"
               onClick={scrollToRightLeg}
-              className="px-2.5 py-1 rounded-lg text-xs font-bold bg-brand-cyber-cyan/25 hover:bg-brand-cyber-cyan/40 text-brand-cyber-cyan border border-brand-cyber-cyan/50 flex items-center gap-1 shadow-sm active:scale-95 transition-transform"
-              title="Scroll to Right Leg branch"
+              className="px-3 py-1 rounded-lg text-xs font-bold bg-brand-cyber-cyan/25 hover:bg-brand-cyber-cyan/40 text-brand-cyber-cyan border border-brand-cyber-cyan/50 flex items-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
+              title="Scroll directly to Right Leg branch"
             >
               Right Leg <span>▶</span>
             </button>
           </div>
-        </div>
-
-        <div className="sm:hidden px-3 py-1.5 bg-black/50 border-b border-themeBorder/40 flex items-center justify-center gap-1.5 text-[10px] text-themeText-muted font-medium">
-          <span className="text-brand-luxury-gold">👈</span>
-          <span>Swipe left & right to explore all binary network nodes</span>
-          <span className="text-brand-luxury-gold">👉</span>
+          <span className="text-[11px] text-themeText-muted font-medium hidden md:inline">
+            💡 Click and drag canvas or use mouse wheel to scroll left & right
+          </span>
         </div>
 
         {/* ============================================================== */}
@@ -742,7 +774,14 @@ export const OrganizationTree: React.FC = () => {
         {/* ============================================================== */}
         <div
           ref={treeScrollContainerRef}
-          className="w-full overflow-x-auto p-3 sm:p-8 min-h-[500px] sm:min-h-[600px] touch-pan-x overscroll-x-contain scrollbar-thin select-none"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUpOrLeave}
+          onMouseLeave={handleMouseUpOrLeave}
+          onWheel={handleWheel}
+          className={`w-full overflow-x-auto p-3 sm:p-8 min-h-[500px] sm:min-h-[600px] touch-pan-x overscroll-x-contain scrollbar-thin select-none transition-colors ${
+            isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          }`}
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           {loading ? (

@@ -27,6 +27,9 @@ import {
   TransferRecipientLookupResponse,
   TokenTransferResponse,
   SupportTicketResponse,
+  UnplacedMemberItem,
+  ActivityItem,
+  UpgradeRequestItem,
 } from './api-client';
 
 const DEMO_MEMBER: UserSummary = {
@@ -519,29 +522,37 @@ export function handleMockFallback<T>(endpoint: string, options: RequestInit = {
     return MOCK_TREE as unknown as T;
   }
 
-  if (urlPath === '/api/v1/organization/node-details') {
+  if (urlPath.includes('/api/v1/organization/members/') && urlPath.endsWith('/details')) {
+    const codeMatch = urlPath.match(/\/members\/([^/]+)\/details/);
+    const code = codeMatch ? decodeURIComponent(codeMatch[1]) : 'RZ-8942';
+    const isRoot = code === 'RZ-8942';
+    const isElena = code === 'RZ-5101';
+    const isMarcus = code === 'RZ-4902';
+
     const details: MemberNodeDetails = {
-      member_code: 'RZ-8942',
-      display_name: 'Johnathan Sterling',
+      member_code: code,
+      display_name: isRoot ? 'Johnathan Sterling' : isElena ? 'Elena Rostova' : isMarcus ? 'Marcus Chen' : `Member ${code}`,
       status: 'ACTIVE',
       role: 'MEMBER',
       activation_date: '2026-01-15T00:00:00Z',
-      package_name: 'Blue Diamond VIP',
-      package_price: '5,000 USDT',
-      direct_children: [
-        { position: 'LEFT', member_code: 'RZ-5101', display_name: 'Elena Rostova' },
-        { position: 'RIGHT', member_code: 'RZ-4902', display_name: 'Marcus Chen' },
-      ],
+      package_name: isRoot ? 'Blue Diamond VIP' : isElena ? 'Platinum Package' : 'Gold Package',
+      package_price: isRoot ? '5,000 USDT' : isElena ? '2,500 USDT' : '1,000 USDT',
+      direct_children: isRoot
+        ? [
+            { position: 'LEFT', member_code: 'RZ-5101', display_name: 'Elena Rostova' },
+            { position: 'RIGHT', member_code: 'RZ-4902', display_name: 'Marcus Chen' },
+          ]
+        : [],
       team_metrics: {
-        total_downline: 142,
-        left_organization: 78,
-        right_organization: 64,
+        total_downline: isRoot ? 142 : isElena ? 78 : 64,
+        left_organization: isRoot ? 78 : isElena ? 42 : 36,
+        right_organization: isRoot ? 64 : isElena ? 36 : 28,
       },
     };
     return details as unknown as T;
   }
 
-  if (urlPath === '/api/v1/organization/list') {
+  if (urlPath === '/api/v1/organization/left' || urlPath === '/api/v1/organization/list') {
     const list: OrganizationListResponse = {
       side: 'LEFT',
       parent_code: 'RZ-8942',
@@ -583,9 +594,142 @@ export function handleMockFallback<T>(endpoint: string, options: RequestInit = {
           status: 'ACTIVE',
           placement_date: '2026-02-01',
         },
+        {
+          s_no: 4,
+          id: 'vikram',
+          member_code: 'RZ-6209',
+          display_name: 'Vikram Malhotra',
+          position: 'LEFT',
+          package_name: 'Gold Package',
+          status: 'ACTIVE',
+          placement_date: '2026-02-08',
+        },
+        {
+          s_no: 5,
+          id: 'hanna',
+          member_code: 'RZ-4411',
+          display_name: 'Hanna Schmidt',
+          position: 'LEFT',
+          package_name: 'Starter Package',
+          status: 'ACTIVE',
+          placement_date: '2026-02-14',
+        },
       ],
     };
     return list as unknown as T;
+  }
+
+  if (urlPath === '/api/v1/organization/right') {
+    const list: OrganizationListResponse = {
+      side: 'RIGHT',
+      parent_code: 'RZ-8942',
+      parent_name: 'Johnathan Sterling',
+      total_members: 64,
+      active_members: 62,
+      inactive_members: 2,
+      page: 1,
+      page_size: 10,
+      total_pages: 7,
+      items: [
+        {
+          s_no: 1,
+          id: 'marcus',
+          member_code: 'RZ-4902',
+          display_name: 'Marcus Chen',
+          position: 'RIGHT',
+          package_name: 'Platinum Package',
+          status: 'ACTIVE',
+          placement_date: '2026-01-21',
+        },
+        {
+          s_no: 2,
+          id: 'aisha',
+          member_code: 'RZ-6309',
+          display_name: 'Aisha Patel',
+          position: 'RIGHT',
+          package_name: 'Gold Package',
+          status: 'ACTIVE',
+          placement_date: '2026-01-26',
+        },
+        {
+          s_no: 3,
+          id: 'dmitry',
+          member_code: 'RZ-1198',
+          display_name: 'Dmitry Volkov',
+          position: 'RIGHT',
+          package_name: 'Starter Package',
+          status: 'ACTIVE',
+          placement_date: '2026-02-03',
+        },
+        {
+          s_no: 4,
+          id: 'chloe',
+          member_code: 'RZ-5510',
+          display_name: 'Chloe Dupont',
+          position: 'RIGHT',
+          package_name: 'Silver Package',
+          status: 'ACTIVE',
+          placement_date: '2026-02-10',
+        },
+        {
+          s_no: 5,
+          id: 'mateo',
+          member_code: 'RZ-3382',
+          display_name: 'Mateo Rossi',
+          position: 'RIGHT',
+          package_name: 'Gold Package',
+          status: 'ACTIVE',
+          placement_date: '2026-02-18',
+        },
+      ],
+    };
+    return list as unknown as T;
+  }
+
+  if (urlPath === '/api/v1/organization/unplaced-members') {
+    const unplaced: UnplacedMemberItem[] = [
+      { id: 'unp-1', member_code: 'RZ-9102', display_name: 'Liam Gallagher', package_name: 'Gold Package', status: 'PENDING_PLACEMENT' },
+      { id: 'unp-2', member_code: 'RZ-9103', display_name: 'Amara Okafor', package_name: 'Silver Package', status: 'PENDING_PLACEMENT' },
+    ];
+    return unplaced as unknown as T;
+  }
+
+  if (urlPath === '/api/v1/organization/place-member') {
+    return {
+      success: true,
+      message: 'Member successfully placed on network tree',
+      placement: { parent_code: 'RZ-8942', child_code: 'RZ-9102', position: 'LEFT' },
+    } as unknown as T;
+  }
+
+  if (urlPath === '/api/v1/wallets/transactions') {
+    const txs: ActivityItem[] = [
+      { id: 'tx-1', reference: 'TXN-902148', tx_type: 'WEEKLY_CASHBACK', direction: 'CREDIT', amount: '1850.00', status: 'COMPLETED', remark: 'Weekly Staking Dividend', created_at: new Date(Date.now() - 3600000 * 2).toISOString() },
+      { id: 'tx-2', reference: 'TXN-902147', tx_type: 'BINARY_MATCHING', direction: 'CREDIT', amount: '750.00', status: 'COMPLETED', remark: 'Matching commission', created_at: new Date(Date.now() - 3600000 * 18).toISOString() },
+      { id: 'tx-3', reference: 'TXN-902146', tx_type: 'TOKEN_TRANSFER', direction: 'DEBIT', amount: '500.00', status: 'COMPLETED', remark: 'Transfer to member RZ-5101', created_at: new Date(Date.now() - 3600000 * 36).toISOString() },
+      { id: 'tx-4', reference: 'TXN-902145', tx_type: 'DEPOSIT', direction: 'CREDIT', amount: '10000.00', status: 'COMPLETED', remark: 'USDT TRC20 On-chain Deposit', created_at: new Date(Date.now() - 3600000 * 72).toISOString() },
+    ];
+    return txs as unknown as T;
+  }
+
+  if (urlPath === '/api/v1/packages/upgrade-requests' || urlPath.startsWith('/api/v1/manager/packages/upgrade-requests')) {
+    const upgReqs: UpgradeRequestItem[] = [
+      {
+        id: 'upg-1',
+        reference: 'UPG-8942-01',
+        member_id: 'usr-member-8942',
+        member_code: 'RZ-8942',
+        member_name: 'Johnathan Sterling',
+        target_package_id: 'pkg-5',
+        target_package_name: 'Blue Diamond VIP',
+        upgrade_amount: 2500,
+        status: 'APPROVED',
+        review_note: 'Verified qualification threshold.',
+        created_at: new Date(Date.now() - 86400000 * 14).toISOString(),
+        updated_at: new Date(Date.now() - 86400000 * 13).toISOString(),
+      },
+    ];
+    return upgReqs as unknown as T;
   }
 
   // 12. Transfers
